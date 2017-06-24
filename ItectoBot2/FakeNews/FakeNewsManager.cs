@@ -19,7 +19,7 @@ namespace ItectoBot2.FakeNews
 
         private async static void Client_MessageReceived(object sender, Discord.MessageEventArgs e)
         {
-            if (!e.User.IsBot && e.Message.Text.Length > 0)
+            if (!e.User.IsBot && e.Message.Text.Length > 7)
             {
                 if (e.Message.Text.Contains(" ") || (!e.Message.Text.Substring(0, 8).Contains("https://") && !e.Message.Text.Substring(0, 7).Contains("http://")))
                     return;
@@ -37,7 +37,7 @@ namespace ItectoBot2.FakeNews
                 }
 
                 Container deserializedProduct = JsonConvert.DeserializeObject<Container>(jsonText);
-                if(deserializedProduct.title == "Article")
+                if(deserializedProduct.type == "article")
                 {
                     float credibility = FakeNewsProbability.GetProbability(FakeNewsExtraction.Extract(e.Message.Text));
                     if (credibility < 20)

@@ -52,7 +52,7 @@ namespace ItectoBot2
             Random r = new Random();
             currentPlayer = r.Next(0, 2) == 0 ? joueur1 : joueur2;
             DisplayGrid(CELL_1 + " A " + currentPlayer.Mention + " de jouer.");
-            if (currentPlayer.Name == "ItectoBot")
+            if (currentPlayer.Name == "Bubbly")
             {
                 couleurIA = 1;
                 couleurAdverse = 2;
@@ -80,7 +80,7 @@ namespace ItectoBot2
                     grid[x, y] = (currentPlayer == joueur1) ? 1 : 2;
                     if (checkWin(x, y))
                     {
-                        if (currentPlayer.Name != "ItectoBot" && (joueur1.Name == "ItectoBot" || joueur2.Name == "ItectoBot"))
+                        if (currentPlayer.Name != "Bubbly" && (joueur1.Name == "Bubbly" || joueur2.Name == "Bubbly"))
                         {
                             //Easter egg
                         }
@@ -101,7 +101,7 @@ namespace ItectoBot2
                         else
                         {
                             DisplayGrid((currentPlayer == joueur1 ? CELL_1 : CELL_2) + " A " + currentPlayer.Mention + " de jouer.");
-                            if (currentPlayer.Name == "ItectoBot")
+                            if (currentPlayer.Name == "Bubbly")
                             {
                                 playIA();
                             }
