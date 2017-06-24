@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Discord;
-using Google.YouTube;
+
 namespace ItectoBot2
 {
     class Program
