@@ -13,7 +13,7 @@ namespace ItectoBot2.FakeNews
         //Vérifie la crédibilité des informations
         public static float GetProbability(Dictionary<string, List<string>> infos)
         {
-            float proba = dataBase.ContainsKey(infos["website"][0])? dataBase[infos["website"][0]] : 30; //Index 0 should contains the key
+            float proba = dataBase.ContainsKey(infos["website"][0])? dataBase[infos["website"][0]] : 50; //Index 0 should contains the key
     
             return proba;
         }
