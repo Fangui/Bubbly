@@ -23,6 +23,7 @@ Commandes ItectoBot:
 
         public static void Main()
         {
+            FakeNews.FakeNewsExtraction.Extract("http://www.lemonde.fr/planete/article/2017/06/24/un-pacte-mondial-pour-l-environnement-remis-a-emmanuel-macron_5150435_3244.html");
             client = new DiscordClient(input =>
             {
                 input.LogLevel = LogSeverity.Info;
