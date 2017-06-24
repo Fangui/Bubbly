@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ItectoBot2
+namespace ItectoBot2.FakeNews
 {
     static class FakeNewsProbability
     {
