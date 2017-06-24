@@ -51,10 +51,13 @@ namespace ItectoBot2.FakeNews
 
             ArticleContainer deserializedProduct = JsonConvert.DeserializeObject<ArticleContainer>(jsonText);
             Console.WriteLine(deserializedProduct.Author);
-
+            deserializedProduct.Author= deserializedProduct.Author.ToLower();
+            deserializedProduct.Author = deserializedProduct.Author.Remove(' ');
             return new Dictionary<string, List<string>>();
         }
+        
     }
+    
     public class ArticleImage
     {
         public bool Primary { get; set; }
