@@ -9,23 +9,22 @@ namespace ItectoBot2.FakeNews
 {
     static class FakeNewsProbability
     {
-        public static Dictionary<string, Tuple<string, float>> Bdd()
+        static float pertinence;
+
+        public static Dictionary<string, Tuple<string, float>> Bdd = new Dictionary<string, Tuple<string, float>>()
         {
-            Dictionary<string, Tuple<string, float>> bdd = new Dictionary<string, Tuple<string, float>>();
-            bdd.Add("nouvel obs", new Tuple<string, float>("left", 0.95f));
-            bdd.Add("mediapart", new Tuple<string, float>("left", 0.95f));
-            bdd.Add("le parisien", new Tuple<string, float>("centre", 0.90f));
-            bdd.Add("bfm tv", new Tuple<string, float>("centre", 0.95f));
-            bdd.Add("20minutes", new Tuple<string, float>("right", 0.95f));
-            bdd.Add("le figaro", new Tuple<string, float>("right", 0.95f));
-            bdd.Add("le gorafi", new Tuple<string, float>("centre", 0.1f));
-            bdd.Add("nordpresse", new Tuple<string, float>("centre", 0.1f));
-            return bdd;
-        }
-        static Dictionary<string, float> dataBase;
+            {"nouvelobs", new Tuple<string, float>("left", 0.95f)},
+            {"mediapart", new Tuple<string, float>("left", 0.95f)},
+            {"leparisien", new Tuple<string, float>("centre", 0.9f)},
+            {"bfmtv", new Tuple<string, float>("centre", 0.95f)},
+            {"20minutes", new Tuple<string, float>("right", 0.95f)},
+            {"lefigaro", new Tuple<string, float>("right", 0.95f)},
+            {"legorafi", new Tuple<string, float>("centre", 0.91f)},
+            {"nordpresse", new Tuple<string, float>("centre", 0.1f)},
 
 
-
+        };
+           
         public static List<string> GetLinkedArticles(string name, string k_title)
         {
             List<string> articles = new List<string>();
@@ -70,14 +69,33 @@ namespace ItectoBot2.FakeNews
         //Vérifie la crédibilité des informations
         public static float GetProbability(Dictionary<string, List<string>> infos)
         {
-            float proba = dataBase.ContainsKey(infos["website"][0])? dataBase[infos["website"][0]] : 50; //Index 0 should contains the key
+            float proba = 0;
+            
+            for(ushort i = 0; i < 8 && proba == 0; ++i)
+                proba = Bdd.ContainsKey(infos["website"][i])? Bdd[infos["website"][i]].Item2 : 50;
+            if (proba == 0)
+                proba = 50;
+
+            pertinence = proba;
     
             return proba;
         }
 
-        public static float ProbabilityIsAll(float pertinence)
+
+
+        public static float Magie(float pertinence, Dictionary<string, Tuple<string, float>> Bdd, Dictionary<string, List<string>> infos)
         {
-            return pertinence;
+            float finalpertinence = 0
+                ;
+            int cpt1 = infos.Count;
+            if (cpt1 != 0)
+            {
+                float ajout = (2 / (1 - (cpt1 / (cpt1 + 3)))) - (cpt1 / ((float)Math.Log(cpt1 + 1)));
+                float rapport = (100 - pertinence) / 2;
+                finalpertinence = pertinence + ( ajout / rapport );
+
+            }
+            return finalpertinence;
         }
     }
 }
