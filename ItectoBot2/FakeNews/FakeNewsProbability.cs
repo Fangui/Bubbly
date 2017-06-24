@@ -9,7 +9,7 @@ namespace ItectoBot2.FakeNews
     static class FakeNewsProbability
     {
         //Vérifie la crédibilité des informations
-        public static float Extract(Dictionary<string, List<string>> infos)
+        public static float GetProbability(Dictionary<string, List<string>> infos)
         {
             //TODO
             return 0;
