@@ -28,9 +28,10 @@ Commandes ItectoBot:
                 input.LogLevel = LogSeverity.Info;
             });
             client.MessageReceived += Client_MessageReceived;
+            FakeNews.FakeNewsManager.Start();
             client.ExecuteAndWait(async () =>
             {
-                await client.Connect("MjA1Mzk4OTMyNjM1Nzc5MDcz.DAxzoA.eNxFmlCFRu8wmLirfdzw_loeOYc", TokenType.Bot);
+                await client.Connect("MzI4MTk1NzI2MjQyODczMzQ2.DDAY5Q.GiAgXmOdJfYY1ASBWg8ZUl8RK30", TokenType.Bot);
                 Log("Infos", LogColor.Info, "Connection succeeds");
                 while(true)
                 {
