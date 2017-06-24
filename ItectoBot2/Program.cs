@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,15 +23,15 @@ Commandes ItectoBot:
 
         public static void Main()
         {
-            FakeNews.FakeNewsExtraction.Extract("http://www.lemonde.fr/planete/article/2017/06/24/un-pacte-mondial-pour-l-environnement-remis-a-emmanuel-macron_5150435_3244.html");
             client = new DiscordClient(input =>
             {
                 input.LogLevel = LogSeverity.Info;
             });
             client.MessageReceived += Client_MessageReceived;
+            FakeNews.FakeNewsManager.Start();
             client.ExecuteAndWait(async () =>
             {
-                await client.Connect("MjA1Mzk4OTMyNjM1Nzc5MDcz.DAxzoA.eNxFmlCFRu8wmLirfdzw_loeOYc", TokenType.Bot);
+                await client.Connect("MzI4MTk1NzI2MjQyODczMzQ2.DDAY5Q.GiAgXmOdJfYY1ASBWg8ZUl8RK30", TokenType.Bot);
                 Log("Infos", LogColor.Info, "Connection succeeds");
                 while(true)
                 {
@@ -104,3 +104,4 @@ Commandes ItectoBot:
         Message
     }
 }
+
