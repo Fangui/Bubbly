@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.IO;
 using System.Net;
-
+using Newtonsoft.Json.Linq;
 
 namespace ItectoBot2.FakeNews
 {
@@ -51,11 +51,34 @@ namespace ItectoBot2.FakeNews
 
             ArticleContainer deserializedProduct = JsonConvert.DeserializeObject<ArticleContainer>(jsonText);
             Console.WriteLine(deserializedProduct.Author);
-            deserializedProduct.Author= deserializedProduct.Author.ToLower();
-            deserializedProduct.Author = deserializedProduct.Author.Remove(' ');
+            //deserializedProduct.Author= deserializedProduct.Author.ToLower();
+            //deserializedProduct.Author = deserializedProduct.Author.Remove(' ');
+
+            Dictionary<string, object> jSonBase = deserializeToDictionary(jsonText);
+            Console.WriteLine((string)jSonBase["author"]);
+
             return new Dictionary<string, List<string>>();
         }
-        
+
+        static private Dictionary<string, object> deserializeToDictionary(string jo)
+        {
+            var values = JsonConvert.DeserializeObject<Dictionary<string, object>>(jo);
+            var values2 = new Dictionary<string, object>();
+            foreach (KeyValuePair<string, object> d in values)
+            {
+                // if (d.Value.GetType().FullName.Contains("Newtonsoft.Json.Linq.JObject"))
+                if (d.Value is JObject)
+                {
+                    values2.Add(d.Key, deserializeToDictionary(d.Value.ToString()));
+                }
+                else
+                {
+                    values2.Add(d.Key, d.Value);
+                }
+            }
+            return values2;
+        }
+
     }
     
     public class ArticleImage

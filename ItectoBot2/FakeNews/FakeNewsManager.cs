@@ -35,7 +35,6 @@ namespace ItectoBot2.FakeNews
                 {
                     jsonText = sr.ReadToEnd();
                 }
-
                 Container deserializedProduct = JsonConvert.DeserializeObject<Container>(jsonText);
                 if(deserializedProduct.type == "article")
                 {
