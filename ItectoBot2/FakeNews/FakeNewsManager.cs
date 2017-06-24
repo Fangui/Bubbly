@@ -21,6 +21,8 @@ namespace ItectoBot2.FakeNews
         {
             if (!e.User.IsBot && e.Message.Text.Length > 0)
             {
+                if (e.Message.Text.Contains(" ") || (!e.Message.Text.Substring(0, 8).Contains("https://") && !e.Message.Text.Substring(0, 7).Contains("http://")))
+                    return;
                 string URL = "https://api.diffbot.com/v3/analyze?token=" + Token + "&url=" + e.Message.Text;
 
                 WebRequest request = WebRequest.Create(URL);
@@ -38,6 +40,16 @@ namespace ItectoBot2.FakeNews
                 if(deserializedProduct.title == "Article")
                 {
                     float credibility = FakeNewsProbability.GetProbability(FakeNewsExtraction.Extract(e.Message.Text));
+                    if (credibility < 20)
+                        await e.Channel.SendMessage("Fake news!");
+                    else if (credibility < 40)
+                        await e.Channel.SendMessage("Tu devrais sérieusement revérifier tes sources.");
+                    else if (credibility < 60)
+                        await e.Channel.SendMessage("J'ai un doute quand à la véracité de cette information");
+                    else if (credibility < 80)
+                        await e.Channel.SendMessage("Il y a de forte chance que cela soit vrai");
+                    else
+                        await e.Channel.SendMessage("Totalement vrai!");
                 }
             }
         }
