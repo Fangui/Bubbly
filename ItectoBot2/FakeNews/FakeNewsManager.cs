@@ -37,7 +37,7 @@ namespace ItectoBot2.FakeNews
                 Container deserializedProduct = JsonConvert.DeserializeObject<Container>(jsonText);
                 if(deserializedProduct.title == "Article")
                 {
-                    FakeNewsExtraction.Extract(e.Message.Text);
+                    float credibility = FakeNewsProbability.GetProbability(FakeNewsExtraction.Extract(e.Message.Text));
                 }
             }
         }
