@@ -92,6 +92,7 @@
     <Compile Include="FakeNews\FakeNewsExtraction.cs" />
     <Compile Include="FakeNews\FakeNewsManager.cs" />
     <Compile Include="FakeNews\FakeNewsProbability.cs" />
+    <Compile Include="FakeNews\Youtube.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Puissance4.cs" />
