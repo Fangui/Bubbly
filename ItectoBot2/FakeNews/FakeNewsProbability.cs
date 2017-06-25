@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Google.Apis.Customsearch.v1;
+using unirest_net.http;
+using unirest_net.request;
 
 namespace ItectoBot2.FakeNews
 {
@@ -81,12 +83,15 @@ namespace ItectoBot2.FakeNews
             return proba;
         }
 
-
+        public static Dictionary<string,object> Mining(string url)
+        {
+            HttpResponse<Dictionary<string,object>> response = Unirest.get(url).header("X-Mashape-Key", "KuxvCAeSoRmshpvRpU3970y3p7E7p1sxlKkjsnOn3Zqde3SgRk").header("Accept", "application/json").asJson<Dictionary<string,object>>();
+            return response.Body;
+        }
 
         public static float Magie(float pertinence, Dictionary<string, Tuple<string, float>> Bdd, Dictionary<string, List<string>> infos)
         {
-            float finalpertinence = 0
-                ;
+            float finalpertinence = 0;
             int cpt1 = infos.Count;
             if (cpt1 != 0)
             {
