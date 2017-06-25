@@ -15,7 +15,7 @@ namespace ItectoBot2.FakeNews
 {
     class Youtube
     {
-
+        
         static string getID(string url)
         {
             int i;
@@ -35,27 +35,40 @@ namespace ItectoBot2.FakeNews
             }
             return ret;
         }
-        public static void HelloYoutube(string url)
+        public static string HelloYoutube(string url)
         {
 
             string id = getID(url);
             Console.WriteLine(id);
             if (id == "")
-                return;
-            string URL = "https://www.googleapis.com/youtube/v3/videos?id=" + id + "&key=" + "AIzaSyAYGftLRE17bOaNLM0oHeXWhd-OUeW1S8o" + "&part=statistics";
+                return "";
+            string URL = "https://www.googleapis.com/youtube/v3/videos?id=" + id + "&key=" + "AIzaSyAYGftLRE17bOaNLM0oHeXWhd-OUeW1S8o" + "&part=statistics,snippet";
             string jsonText = FakeNewsManager.GetJsonFromURL(URL);
             JObject jo = JObject.Parse(jsonText);
             int dislike = int.Parse(jo.SelectToken("items[0].statistics.dislikeCount").ToString());
             int like = int.Parse(jo.SelectToken("items[0].statistics.likeCount").ToString());
-            float ratiolike = like / (like + dislike);
+            float ratiolike = (float)like / (float)(like + dislike)*100;
+            string title = jo.SelectToken("items[0].snippet.localized.title").ToString();
+            bool IALLCAPS = title.ToUpper() == title;
+            Console.WriteLine("IsAllCaps?" + IALLCAPS);
             Console.WriteLine(dislike);
             Console.WriteLine(like);
             URL = "https://www.googleapis.com/youtube/v3/commentThreads?videoId=" + id + "&key=AIzaSyAYGftLRE17bOaNLM0oHeXWhd-OUeW1S8o" + "&part=snippet";
             jsonText = FakeNewsManager.GetJsonFromURL(URL);
             jo = JObject.Parse(jsonText);
-            string s = jo.SelectToken("items[0].snippet.topLevelComment.textDisplay").ToString();
-            Console.WriteLine(s);
+            int numOfComplain = 0;
+            for (int i = 0; i < 20 || i < int.Parse(jo.SelectToken("pageInfo.totalResults").ToString()); ++i) {
+                string s = jo.SelectToken("items["+i.ToString()+"].snippet.topLevelComment.snippet.textDisplay").ToString();
+                s = s.ToLower();
+                if (s.Contains("clickbait")||s.Contains("putaclick")||s.Contains("fake title")|| s.Contains("putaclic")||s.Contains("Putaclique"))
+                {
+                    numOfComplain++;
+                }
+                Console.WriteLine(s);
 
+            }
+            Console.WriteLine(numOfComplain);
+            return ratiolike.ToString();
         }
     }
 }
