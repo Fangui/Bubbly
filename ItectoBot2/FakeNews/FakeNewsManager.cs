@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.IO;
 using System.Net;
+using Newtonsoft.Json.Linq;
 
 namespace ItectoBot2.FakeNews
 {
@@ -26,7 +27,23 @@ namespace ItectoBot2.FakeNews
                 if (e.Message.Text.Contains("www.facebook.com"))
                 {
                     List<string> articles = new List<string>();
-
+                    string jsonText = GetJsonFromURL("https://api.diffbot.com/v3/article?token=6e121650bbc3a88369784060b046e1bf&fields=links&url=" + e.Message.Text);
+                    JObject jo = JObject.Parse(jsonText);
+                    string[] links = jo.SelectToken("objects[0].links").ToString().Trim('[', ']', ' ').Split(',');
+                    foreach (string link in links)
+                    {
+                        if (link.Contains("l.facebook.com/l.php?u="))
+                        {
+                            int startIndex = link.IndexOf('=') + 1;
+                            int endIndex = link.IndexOf('=', startIndex);
+                            await SendAvis(e, link.Substring(startIndex, endIndex - startIndex));
+                            return;
+                        }
+                    }
+                }
+                else if (e.Message.Text.Contains("www.youtube.com"))
+                {
+                    await e.Channel.SendMessage(Youtube.HelloYoutube(e.Message.Text));
                 }
                 else
                 {
