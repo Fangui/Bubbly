@@ -27,7 +27,7 @@ namespace ItectoBot2.FakeNews
                 if (e.Message.Text.Contains("www.facebook.com"))
                 {
                     List<string> articles = new List<string>();
-                    string jsonText = GetJsonFromURL("https://api.diffbot.com/v2/article?token=6e121650bbc3a88369784060b046e1bf&fields=links&url=" + e.Message.Text);
+                    string jsonText = GetJsonFromURL("https://api.diffbot.com/v3/article?token=6e121650bbc3a88369784060b046e1bf&fields=links&url=" + e.Message.Text);
                     JObject jo = JObject.Parse(jsonText);
                     string[] links = jo.SelectToken("objects[0].links").ToString().Trim('[', ']', ' ').Split(',');
                     foreach (string link in links)
