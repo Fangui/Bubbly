@@ -43,7 +43,7 @@ namespace ItectoBot2.FakeNews
                 }
                 else if (e.Message.Text.Contains("www.youtube.com"))
                 {
-                    await e.Channel.SendMessage("TODO_YOUTUBE_LUKA_FUNCTION");
+                    await e.Channel.SendMessage(Youtube.HelloYoutube(e.Message.Text));
                 }
                 else
                 {
