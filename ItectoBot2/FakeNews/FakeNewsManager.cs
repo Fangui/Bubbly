@@ -24,7 +24,7 @@ namespace ItectoBot2.FakeNews
             {
                 if (e.Message.Text.Contains(" ") || (!e.Message.Text.Substring(0, 8).Contains("https://") && !e.Message.Text.Substring(0, 7).Contains("http://")))
                     return;
-                if (e.Message.Text.Contains("www.facebook.com"))
+                if (e.Message.Text.Contains("facebook.com"))
                 {
                     List<string> articles = new List<string>();
                     string jsonText = GetJsonFromURL("https://api.diffbot.com/v3/article?token=6e121650bbc3a88369784060b046e1bf&fields=links&url=" + e.Message.Text);
@@ -36,7 +36,8 @@ namespace ItectoBot2.FakeNews
                         {
                             int startIndex = link.IndexOf('=') + 1;
                             int endIndex = link.IndexOf('=', startIndex);
-                            await SendAvis(e, link.Substring(startIndex, endIndex - startIndex));
+                            string s = link.Substring(startIndex, endIndex - startIndex);
+                            await SendAvis(e, s);
                             return;
                         }
                     }
@@ -53,6 +54,7 @@ namespace ItectoBot2.FakeNews
         }
         static async Task SendAvis(Discord.MessageEventArgs e, string article)
         {
+            await e.Channel.SendIsTyping();
             string URL = "https://api.diffbot.com/v2/analyze?token=" + Token + "&url=" + article;
 
             Container deserializedProduct = JsonConvert.DeserializeObject<Container>(GetJsonFromURL(URL));
@@ -60,15 +62,15 @@ namespace ItectoBot2.FakeNews
             {
                 float credibility = FakeNewsProbability.GetProbability(FakeNewsExtraction.Extract(e.Message.Text));
                 if (credibility < 20)
-                    await e.Channel.SendMessage("**" + deserializedProduct.title + "** est une fake news!");
+                    await e.Channel.SendMessage("__" + deserializedProduct.title + "__ est une fake news!");
                 else if (credibility < 40)
-                    await e.Channel.SendMessage("**" + deserializedProduct.title + "** est surement une fake news.");
+                    await e.Channel.SendMessage("__" + deserializedProduct.title + "__ est surement une fake news.");
                 else if (credibility < 60)
-                    await e.Channel.SendMessage("**" + deserializedProduct.title + "** m'inspire peu confiance. Tu devrais aller vérifier tes sources.");
+                    await e.Channel.SendMessage("__" + deserializedProduct.title + "__ m'inspire peu confiance. Tu devrais aller vérifier tes sources.");
                 else if (credibility < 80)
-                    await e.Channel.SendMessage("**" + deserializedProduct.title + "** à l'air d'être un article sérieux.");
+                    await e.Channel.SendMessage("__" + deserializedProduct.title + "__ à l'air d'être un article sérieux.");
                 else
-                    await e.Channel.SendMessage("**" + deserializedProduct.title + "** est totalement vrai!");
+                    await e.Channel.SendMessage("__" + deserializedProduct.title + "__ est une information fiable.");
             }
         }
 

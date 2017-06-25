@@ -11,21 +11,18 @@ namespace ItectoBot2.FakeNews
 {
     static class FakeNewsProbability
     {
-        static float pertinence;
-
         public static Dictionary<string, Tuple<string, float>> Bdd = new Dictionary<string, Tuple<string, float>>()
         {
-            {"lemonde", new Tuple<string, float>("left", 0.95f)},
-            {"l'obs", new Tuple<string, float>("left", 0.95f)},
-            {"mediapart", new Tuple<string, float>("left", 0.95f)},
-            {"leparisien.fr", new Tuple<string, float>("centre", 0.9f)},
-            {"bfmtv", new Tuple<string, float>("centre", 0.95f)},
-            {"20minutes.fr", new Tuple<string, float>("right", 0.95f)},
-            {"lefigaro", new Tuple<string, float>("right", 0.95f)},
-            {"legorafi", new Tuple<string, float>("centre", 0.1f)},
-            {"nordpresse-toutel'actualité", new Tuple<string, float>("centre", 0.1f)}
-
-
+            {"lemonde", new Tuple<string, float>("left", 95f)},
+            {"l'obs", new Tuple<string, float>("left", 95f)},
+            {"mediapart", new Tuple<string, float>("left", 95f)},
+            {"leparisien.fr", new Tuple<string, float>("centre", 90f)},
+            {"bfmtv", new Tuple<string, float>("centre", 95f)},
+            {"20minutes.fr", new Tuple<string, float>("right", 95f)},
+            {"lefigaro", new Tuple<string, float>("right", 95f)},
+            {"facebook.com", new Tuple<string, float>("centre", 95f)},
+            {"legorafi", new Tuple<string, float>("centre", 10f)},
+            {"nordpresse-toutel'actualité", new Tuple<string, float>("centre", 10f)}
         };
            
         public static List<string> GetLinkedArticles(string name, string k_title)
@@ -66,36 +63,20 @@ namespace ItectoBot2.FakeNews
             return articles;
         }
 
-        
-
-
         //Vérifie la crédibilité des informations
         public static float GetProbability(Dictionary<string, List<string>> infos)
         {
-            float proba = Bdd.ContainsKey(infos["website"][0])? Bdd[infos["website"][0]].Item2 : 50;
-            pertinence = proba;
-    
+            Program.Log("siteName", LogColor.Message, infos["website"][0]);
+            Program.Log("title", LogColor.Message, infos["title"][0]);
+            Program.Log("author", LogColor.Message, infos["author"][0]);
+            Program.Log("date", LogColor.Message, infos["date"][0]);
+
+            float proba = Bdd.ContainsKey(infos["website"][0]) ? Bdd[infos["website"][0]].Item2 : 50;
+            if (infos["author"][0] == "")
+                proba -= 16;
+            if (infos["date"][0] == "")
+                proba -= 16;
             return proba;
-        }
-
-        public static Dictionary<string,object> Mining(string url)
-        {
-            HttpResponse<Dictionary<string,object>> response = Unirest.get(url).header("X-Mashape-Key", "KuxvCAeSoRmshpvRpU3970y3p7E7p1sxlKkjsnOn3Zqde3SgRk").header("Accept", "application/json").asJson<Dictionary<string,object>>();
-            return response.Body;
-        }
-
-        public static float Magie(float pertinence, Dictionary<string, Tuple<string, float>> Bdd, Dictionary<string, List<string>> infos)
-        {
-            float finalpertinence = 0;
-            int cpt1 = infos.Count;
-            if (cpt1 != 0)
-            {
-                float ajout = (2 / (1 - (cpt1 / (cpt1 + 3)))) - (cpt1 / ((float)Math.Log(cpt1 + 1)));
-                float rapport = (100 - pertinence) / 2;
-                finalpertinence = pertinence + ( ajout / rapport );
-
-            }
-            return finalpertinence;
         }
     }
 }

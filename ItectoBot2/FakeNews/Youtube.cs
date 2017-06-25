@@ -37,9 +37,7 @@ namespace ItectoBot2.FakeNews
         }
         public static string HelloYoutube(string url)
         {
-
             string id = getID(url);
-            Console.WriteLine(id);
             if (id == "")
                 return "";
             string URL = "https://www.googleapis.com/youtube/v3/videos?id=" + id + "&key=" + "AIzaSyAYGftLRE17bOaNLM0oHeXWhd-OUeW1S8o" + "&part=statistics,snippet";
@@ -50,9 +48,6 @@ namespace ItectoBot2.FakeNews
             float ratiolike = (float)like / (float)(like + dislike)*100;
             string title = jo.SelectToken("items[0].snippet.localized.title").ToString();
             bool IALLCAPS = title.ToUpper() == title;
-            Console.WriteLine("IsAllCaps?" + IALLCAPS);
-            Console.WriteLine(dislike);
-            Console.WriteLine(like);
             URL = "https://www.googleapis.com/youtube/v3/commentThreads?videoId=" + id + "&key=AIzaSyAYGftLRE17bOaNLM0oHeXWhd-OUeW1S8o" + "&part=snippet";
             jsonText = FakeNewsManager.GetJsonFromURL(URL);
             jo = JObject.Parse(jsonText);
@@ -64,11 +59,21 @@ namespace ItectoBot2.FakeNews
                 {
                     numOfComplain++;
                 }
-                Console.WriteLine(s);
-
             }
-            Console.WriteLine(numOfComplain);
-            return ratiolike.ToString();
+
+            float proba = ratiolike;
+            proba -= 10 * numOfComplain;
+            if (IALLCAPS)
+            {
+                proba -= 20;
+                if (proba > 50)
+                {
+                    Program.Log("note vidéo", LogColor.Message, proba.ToString());
+                    return "Vidéo cool, mais pas sérieuse";
+                }
+            }
+            Program.Log("note vidéo", LogColor.Message, proba.ToString());
+            return proba > 50 ? "Vidéo sérieuse." : "Vidéo pas sérieuse.";
         }
     }
 }
