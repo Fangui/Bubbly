@@ -35,33 +35,13 @@ namespace ItectoBot2.FakeNews
         //Extrait les mots clés de l'article
         public static Dictionary<string, List<string>> Extract(string article)
         {
-            //TODO
-            string URL = "https://api.diffbot.com/v3/article?&fields=links,meta&token=" + Token + "&url=" + article;
+            Dictionary<string, List<string>> infos = new Dictionary<string, List<string>>();
             
-            WebRequest request = WebRequest.Create(URL);
-            request.Method = "GET";
-            request.ContentType = "application/json; charset=utf-8";
+            
+            JObject jo = JObject.Parse(FakeNewsManager.GetJsonFromURL("https://api.diffbot.com/v3/article?&fields=links,meta&token=" + Token + "&url=" + article));
+            infos.Add("website", new List<string>() { jo.SelectToken("objects[0].sitename").ToString().Remove(' ').ToLower()});
 
-            var response = (HttpWebResponse)request.GetResponse();
-            string jsonText;
-            using (var sr = new StreamReader(response.GetResponseStream()))
-            {
-                jsonText = sr.ReadToEnd();
-            }
-
-            //Console.WriteLine(jsonText);
-            ArticleContainer deserializedProduct = JsonConvert.DeserializeObject<ArticleContainer>(jsonText);
-            Console.WriteLine(deserializedProduct.Author);
-            //deserializedProduct.Author= deserializedProduct.Author.ToLower();
-            //deserializedProduct.Author = deserializedProduct.Author.Remove(' ');
-
-            /*Dictionary<string, object> jSonBase = deserializeToDictionary(jsonText);
-            Console.WriteLine(((JArray)(jSonBase["objects"])).SelectToken("object[0].author.text").ToString());*/
-
-            JObject jo = JObject.Parse(jsonText);
-            Console.WriteLine(jo.SelectToken("objects[0].author"));
-
-            return new Dictionary<string, List<string>>();
+            return infos;
         }
 
         static private Dictionary<string, object> deserializeToDictionary(string jo)
