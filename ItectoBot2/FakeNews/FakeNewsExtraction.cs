@@ -1,3 +1,4 @@
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,7 +36,7 @@ namespace ItectoBot2.FakeNews
         public static Dictionary<string, List<string>> Extract(string article)
         {
             //TODO
-            string URL = "https://api.diffbot.com/v2/article?token=" + Token + "&url=" + article;
+            string URL = "https://api.diffbot.com/v3/article?&fields=links,meta&token=" + Token + "&url=" + article;
             
             WebRequest request = WebRequest.Create(URL);
             request.Method = "GET";
@@ -47,15 +48,18 @@ namespace ItectoBot2.FakeNews
             {
                 jsonText = sr.ReadToEnd();
             }
-           
 
+            //Console.WriteLine(jsonText);
             ArticleContainer deserializedProduct = JsonConvert.DeserializeObject<ArticleContainer>(jsonText);
             Console.WriteLine(deserializedProduct.Author);
             //deserializedProduct.Author= deserializedProduct.Author.ToLower();
             //deserializedProduct.Author = deserializedProduct.Author.Remove(' ');
 
-            Dictionary<string, object> jSonBase = deserializeToDictionary(jsonText);
-            Console.WriteLine((string)jSonBase["author"]);
+            /*Dictionary<string, object> jSonBase = deserializeToDictionary(jsonText);
+            Console.WriteLine(((JArray)(jSonBase["objects"])).SelectToken("object[0].author.text").ToString());*/
+
+            JObject jo = JObject.Parse(jsonText);
+            Console.WriteLine(jo.SelectToken("objects[0].author"));
 
             return new Dictionary<string, List<string>>();
         }
@@ -98,3 +102,14 @@ namespace ItectoBot2.FakeNews
     }
 
 }
+   
+    public class ArticleImage
+    {
+        public bool Primary { get; set; }
+        public string Caption { get; set; }
+        public string Url { get; set; }
+        public int PixelHeight { get; set; }
+        public int PixelWidth { get; set; }
+    }
+
+   

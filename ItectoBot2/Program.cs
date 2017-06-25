@@ -22,7 +22,7 @@ Commandes ItectoBot:
 
 
         public static void Main()
-        {
+        {  
             client = new DiscordClient(input =>
             {
                 input.LogLevel = LogSeverity.Info;

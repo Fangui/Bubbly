@@ -23,34 +23,51 @@ namespace ItectoBot2.FakeNews
             {
                 if (e.Message.Text.Contains(" ") || (!e.Message.Text.Substring(0, 8).Contains("https://") && !e.Message.Text.Substring(0, 7).Contains("http://")))
                     return;
-                string URL = "https://api.diffbot.com/v3/analyze?token=" + Token + "&url=" + e.Message.Text;
-
-                WebRequest request = WebRequest.Create(URL);
-                request.Method = "GET";
-                request.ContentType = "application/json; charset=utf-8";
-
-                var response = (HttpWebResponse)request.GetResponse();
-                string jsonText;
-                using (var sr = new StreamReader(response.GetResponseStream()))
+                if (e.Message.Text.Contains("www.facebook.com"))
                 {
-                    jsonText = sr.ReadToEnd();
+                    List<string> articles = new List<string>();
+
                 }
-                Container deserializedProduct = JsonConvert.DeserializeObject<Container>(jsonText);
-                if(deserializedProduct.type == "article")
+                else
                 {
-                    float credibility = FakeNewsProbability.GetProbability(FakeNewsExtraction.Extract(e.Message.Text));
-                    if (credibility < 20)
-                        await e.Channel.SendMessage("Fake news!");
-                    else if (credibility < 40)
-                        await e.Channel.SendMessage("Tu devrais sérieusement revérifier tes sources.");
-                    else if (credibility < 60)
-                        await e.Channel.SendMessage("J'ai un doute quand à la véracité de cette information");
-                    else if (credibility < 80)
-                        await e.Channel.SendMessage("Il y a de forte chance que cela soit vrai");
-                    else
-                        await e.Channel.SendMessage("Totalement vrai!");
+                    await SendAvis(e, e.Message.Text);
                 }
             }
+        }
+        static async Task SendAvis(Discord.MessageEventArgs e, string article)
+        {
+            string URL = "https://api.diffbot.com/v2/analyze?token=" + Token + "&url=" + article;
+
+            Container deserializedProduct = JsonConvert.DeserializeObject<Container>(GetJsonFromURL(URL));
+            if (deserializedProduct.type == "article")
+            {
+                float credibility = FakeNewsProbability.GetProbability(FakeNewsExtraction.Extract(e.Message.Text));
+                if (credibility < 20)
+                    await e.Channel.SendMessage("**" + deserializedProduct.title + "** est une fake news!");
+                else if (credibility < 40)
+                    await e.Channel.SendMessage("**" + deserializedProduct.title + "** est surement une fake news.");
+                else if (credibility < 60)
+                    await e.Channel.SendMessage("**" + deserializedProduct.title + "** m'inspire peu confiance. Tu devrais aller vérifier tes sources.");
+                else if (credibility < 80)
+                    await e.Channel.SendMessage("**" + deserializedProduct.title + "** à l'air d'être un article sérieux.");
+                else
+                    await e.Channel.SendMessage("**" + deserializedProduct.title + "** est totalement vrai!");
+            }
+        }
+
+        public static string GetJsonFromURL(string URL)
+        {
+            WebRequest request = WebRequest.Create(URL);
+            request.Method = "GET";
+            request.ContentType = "application/json; charset=utf-8";
+
+            var response = (HttpWebResponse)request.GetResponse();
+            string jsonText;
+            using (var sr = new StreamReader(response.GetResponseStream()))
+            {
+                jsonText = sr.ReadToEnd();
+            }
+            return jsonText;
         }
     }
     class Container
