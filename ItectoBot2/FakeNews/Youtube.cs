@@ -35,13 +35,13 @@ namespace ItectoBot2.FakeNews
             }
             return ret;
         }
-        public static void HelloYoutube(string url)
+        public static string HelloYoutube(string url)
         {
 
             string id = getID(url);
             Console.WriteLine(id);
             if (id == "")
-                return;
+                return "";
             string URL = "https://www.googleapis.com/youtube/v3/videos?id=" + id + "&key=" + "AIzaSyAYGftLRE17bOaNLM0oHeXWhd-OUeW1S8o" + "&part=statistics";
             string jsonText = FakeNewsManager.GetJsonFromURL(URL);
             JObject jo = JObject.Parse(jsonText);
@@ -55,7 +55,7 @@ namespace ItectoBot2.FakeNews
             jo = JObject.Parse(jsonText);
             string s = jo.SelectToken("items[0].snippet.topLevelComment.textDisplay").ToString();
             Console.WriteLine(s);
-
+            return (like / (dislike + like)).ToString();
         }
     }
 }
