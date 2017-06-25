@@ -18,7 +18,7 @@ namespace ItectoBot2.FakeNews
             {"mediapart", new Tuple<string, float>("left", 0.95f)},
             {"leparisien.fr", new Tuple<string, float>("centre", 0.9f)},
             {"bfmtv", new Tuple<string, float>("centre", 0.95f)},
-            {"20minutes", new Tuple<string, float>("right", 0.95f)},
+            {"20minutes.fr", new Tuple<string, float>("right", 0.95f)},
             {"lefigaro", new Tuple<string, float>("right", 0.95f)},
             {"legorafi", new Tuple<string, float>("centre", 0.1f)},
             {"nordpresse-toutel'actualité", new Tuple<string, float>("centre", 0.1f)}
