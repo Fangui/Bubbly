@@ -13,10 +13,10 @@ namespace ItectoBot2.FakeNews
 
         public static Dictionary<string, Tuple<string, float>> Bdd = new Dictionary<string, Tuple<string, float>>()
         {
-            {"lemonde", new Tuple<string, float>("left", 0.95f },
+            {"lemonde", new Tuple<string, float>("left", 0.95f)},
             {"l'obs", new Tuple<string, float>("left", 0.95f)},
             {"mediapart", new Tuple<string, float>("left", 0.95f)},
-            {"leparisien", new Tuple<string, float>("centre", 0.9f)},
+            {"leparisien.fr", new Tuple<string, float>("centre", 0.9f)},
             {"bfmtv", new Tuple<string, float>("centre", 0.95f)},
             {"20minutes", new Tuple<string, float>("right", 0.95f)},
             {"lefigaro", new Tuple<string, float>("right", 0.95f)},
@@ -70,12 +70,7 @@ namespace ItectoBot2.FakeNews
         //Vérifie la crédibilité des informations
         public static float GetProbability(Dictionary<string, List<string>> infos)
         {
-            float proba = 0;
-            for(ushort i = 0; i < 9 && proba == 0; ++i)
-                proba = Bdd.ContainsKey(infos["website"][i])? Bdd[infos["website"][i]].Item2 : 50;
-            if (proba == 0)
-                proba = 50;
-
+            float proba = Bdd.ContainsKey(infos["website"][0])? Bdd[infos["website"][0]].Item2 : 50;
             pertinence = proba;
     
             return proba;
@@ -85,8 +80,7 @@ namespace ItectoBot2.FakeNews
 
         public static float Magie(float pertinence, Dictionary<string, Tuple<string, float>> Bdd, Dictionary<string, List<string>> infos)
         {
-            float finalpertinence = 0
-                ;
+            float finalpertinence = 0;
             int cpt1 = infos.Count;
             if (cpt1 != 0)
             {
