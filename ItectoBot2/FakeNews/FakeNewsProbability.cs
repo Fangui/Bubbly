@@ -66,7 +66,7 @@ namespace ItectoBot2.FakeNews
             return articles;
         }
 
-
+        
 
 
         //Vérifie la crédibilité des informations
